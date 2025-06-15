@@ -1,81 +1,80 @@
+# PitStop – Your Real-Time Car Breakdown Savior
 
-# 🚗 PitStop – Your Real-Time Car Breakdown Savior
-
-**PitStop** is a full-stack application designed to revolutionize how drivers in emergencies find reliable help. Whether you're stranded with a breakdown or low on fuel, PitStop instantly connects you to nearby mechanics and petrol stations using real-time location, live chat, and intelligent filters.
+**PitStop** is a full-stack emergency response application that helps drivers in Kenya quickly locate nearby mechanics or petrol stations when faced with car trouble. Whether you’re stranded due to a breakdown or running low on fuel, PitStop instantly connects you to help using real-time location, intelligent filters, and live chat.
 
 ---
 
-## 📌 Features (MVP)
+## MVP Features
 
 ### For Drivers
-- 🆘 **Emergency Mode** – Instantly find the 3 nearest mechanics.
-- 💬 **Live Chat** – Talk to available mechanics with photo/video sharing.
-- ⛽ **Petrol Station Finder** – Filter stations by fuel type, distance, and price.
-- ⭐ **Ratings & Reviews** – Stay safe by choosing trusted professionals.
-- 🚨 **SOS Alerts** – Broadcast an emergency to verified nearby helpers.
+- Emergency Mode – Instantly locate the 3 nearest available mechanics
+- Live Chat – Communicate with mechanics, with support for photo/video sharing
+- Petrol Station Finder – Filter by fuel type, distance, and price
+- Ratings & Reviews – Choose trusted professionals based on verified feedback
+- SOS Alerts – Send emergency alerts to verified nearby helpers
 
 ### For Mechanics
-- 🔧 **Dashboard** – Set availability, services, and pricing.
-- 📱 **Real-Time Alerts** – Get requests from nearby drivers.
-- 📊 **Performance Stats** – Track reputation and response time.
+- Mechanic Dashboard – Set availability, list services, and manage pricing
+- Real-Time Alerts – Receive instant service requests from drivers nearby
+- Performance Stats – Monitor ratings, reviews, and response metrics
 
 ---
 
-## 💻 Tech Stack
+## Tech Stack
 
 ### Frontend
-- React.js
-- Tailwind CSS
-- Leaflet.js (for interactive maps)
-- Firebase (Auth + Notifications)
+- React.js  
+- Tailwind CSS  
+- Leaflet.js (interactive maps)  
+- Firebase (authentication and notifications)
 
 ### Backend
-- Python (FastAPI)
-- SQLite (for initial data management)
-- Socket.io (for real-time chat)
+- Python (FastAPI)  
+- SQLite (initial data storage)  
+- Socket.io (real-time messaging)
 
 ---
 
-## 🌍 Target Users
+## Target Users
 
-- Drivers in need of roadside assistance
-- Mobile mechanics looking to grow their business
-- Petrol station owners wanting to attract customers
-
----
-
-## 🚀 Future Upgrades
-
-- AI-powered photo diagnostics
-- Augmented reality (AR) repair guides
-- Blockchain-based reviews to prevent manipulation
-- Predictive maintenance alerts based on car model + mileage
+- Drivers needing roadside assistance  
+- Freelance mechanics looking to expand their reach  
+- Petrol station owners aiming to attract more customers
 
 ---
 
-## 📦 Deployment
+## Future Enhancements
 
-- Frontend: Vercel / Netlify (React App)
-- Backend: Render / Railway (FastAPI + SQLite)
-- Firebase: Auth, Realtime DB, FCM
-
----
-
-## ⚠️ License
-
-**© 2025 Joy Katanu Kyalo. All rights reserved.**
-
-This project is proprietary and confidential. No part of the source code, design, or functionality may be used, copied, modified, or distributed without **explicit written permission** from the author.
+- AI-powered image diagnostics  
+- AR-based repair guides for self-help  
+- Blockchain-secured review system  
+- Predictive maintenance alerts (based on car model and usage)
 
 ---
 
-## 🙋‍♀️ Author
+## Deployment Plan
+
+- Frontend: Vercel or Netlify  
+- Backend: Render or Railway  
+- Firebase: Auth, Realtime DB, and Cloud Messaging
+
+---
+
+## License
+
+© 2025 Joy Katanu Kyalo. All rights reserved.  
+This project is proprietary and confidential. No part of the codebase or design may be used, copied, or distributed without explicit written permission from the author.
+
+---
+
+## Author
 
 **Joy Katanu Kyalo**  
-*Full-stack developer with a passion for practical, life-changing tech.*  
-📧 katanujoy99@gmail.com  
-🌐 [LinkedIn] | [Portfolio]https://katanujoy.github.io/Joy-Katanu-CV/
+Full-stack developer passionate about practical, human-centered technology  
+Email: katanujoy99@gmail.com  
+Portfolio: [https://katanujoy.github.io/Joy-Katanu-CV/](https://katanujoy.github.io/Joy-Katanu-CV/)  
+LinkedIn: [Insert Your LinkedIn URL Here]
 
 ---
 
-> 💡 _“It’s like Uber for breakdowns — live chat, emergency mode, and instant relief.”_
+> "Think Uber for breakdowns — live chat, emergency mode, and instant relief."

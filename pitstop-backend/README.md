@@ -24,7 +24,7 @@ Project Structure
 Getting Started
 1. Clone the Repository
 
-git clone https://github.com/yourusername/pitstop.git
+git clone https://github.com/katanujoy/PitStop.git
 cd pitstop/backend
 
 2. Set Up a Virtual Environment

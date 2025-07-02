@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,16 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
+    if (!formData.name.trim() || !formData.email.trim()) {
+      setError('Name and Email are required.');
+      return;
+    }
+
     setLoading(true);
+    setError('');
+
     try {
       const res = await fetch('https://pitstop-backend1.onrender.com/api/register', {
         method: 'POST',
@@ -22,14 +32,17 @@ const RegisterPage = () => {
       });
 
       const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem('pitstopUser', JSON.stringify(data));
+
+      if (res.ok && data.token) {
+        const decoded = jwtDecode(data.token);
+        localStorage.setItem('pitstopToken', data.token);
+        localStorage.setItem('pitstopUser', JSON.stringify(decoded));
         navigate('/emergency');
       } else {
-        setError(data.error || 'Registration failed.');
+        setError(data?.error || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      setError('Server error. Try again later.');
+      setError('Server error. Please try again later.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -74,9 +87,17 @@ const RegisterPage = () => {
             <option value="mechanic">Mechanic</option>
           </select>
 
-          <button type="submit" style={styles.button} disabled={loading}>
+          <button
+            type="submit"
+            style={{
+              ...styles.button,
+              opacity: loading || !formData.name || !formData.email ? 0.7 : 1,
+            }}
+            disabled={loading || !formData.name || !formData.email}
+          >
             {loading ? 'Registering...' : 'Enter App'}
           </button>
+
           {error && <p style={styles.error}>{error}</p>}
         </form>
       </div>
@@ -96,7 +117,7 @@ const styles = {
   },
   card: {
     backgroundColor: '#1e293b',
-    padding: '3rem 3.5rem',
+    padding: '2.5rem 2rem',
     borderRadius: '16px',
     boxShadow: '0 12px 30px rgba(252, 211, 77, 0.3)',
     maxWidth: '450px',
@@ -117,13 +138,22 @@ const styles = {
     flexDirection: 'column',
   },
   label: {
-    marginBottom: '0.6rem',
+    marginBottom: '0.5rem',
     fontWeight: '600',
     fontSize: '0.95rem',
     color: '#e2e8f0',
   },
   input: {
-    width: '100%',
+    padding: '0.75rem 1rem',
+    marginBottom: '1.2rem',
+    borderRadius: '10px',
+    border: '1px solid #374151',
+    backgroundColor: '#0f172a',
+    color: '#f1f5f9',
+    fontSize: '1rem',
+    outline: 'none',
+  },
+  select: {
     padding: '0.75rem 1rem',
     marginBottom: '1.5rem',
     borderRadius: '10px',
@@ -132,24 +162,10 @@ const styles = {
     color: '#f1f5f9',
     fontSize: '1rem',
     outline: 'none',
-    transition: 'border-color 0.25s ease',
-  },
-  select: {
-    width: '100%',
-    padding: '0.75rem 1rem',
-    marginBottom: '2rem',
-    borderRadius: '10px',
-    border: '1px solid #374151',
-    backgroundColor: '#0f172a',
-    color: '#f1f5f9',
-    fontSize: '1rem',
-    outline: 'none',
     cursor: 'pointer',
-    transition: 'border-color 0.25s ease',
   },
   button: {
-    width: '100%',
-    padding: '0.85rem',
+    padding: '0.9rem',
     background: 'linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%)',
     border: 'none',
     borderRadius: '12px',

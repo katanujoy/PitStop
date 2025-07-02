@@ -8,7 +8,6 @@ const LoginPage = ({ onLogin, goBack }) => {
   const formik = useFormik({
     initialValues: {
       email: '',
-      password: '',
     },
     validate: (values) => {
       const errors = {};
@@ -17,10 +16,6 @@ const LoginPage = ({ onLogin, goBack }) => {
       } else if (!/\S+@\S+\.\S+/.test(values.email)) {
         errors.email = 'Invalid email format';
       }
-
-      if (!values.password) {
-        errors.password = 'Required';
-      }
       return errors;
     },
     onSubmit: async (values, { setSubmitting, setErrors }) => {
@@ -28,7 +23,7 @@ const LoginPage = ({ onLogin, goBack }) => {
         const res = await fetch('https://pitstop-backend1.onrender.com/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(values),
+          body: JSON.stringify({ email: values.email }),
         });
 
         const data = await res.json();
@@ -38,10 +33,10 @@ const LoginPage = ({ onLogin, goBack }) => {
           onLogin(data.user);
           navigate('/');
         } else {
-          setErrors({ general: data.error || 'Login failed.' });
+          setErrors({ general: data.error || 'Login failed. Please try again.' });
         }
       } catch (err) {
-        setErrors({ general: 'Server error. Try again later.' });
+        setErrors({ general: 'Network error. Please try again later.' });
         console.error(err);
       } finally {
         setSubmitting(false);
@@ -61,38 +56,36 @@ const LoginPage = ({ onLogin, goBack }) => {
             type="email"
             name="email"
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             value={formik.values.email}
             style={styles.input}
             placeholder="you@example.com"
+            autoFocus
           />
           {formik.touched.email && formik.errors.email && (
             <div style={styles.error}>{formik.errors.email}</div>
           )}
 
-          <label style={styles.label}>Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-            style={styles.input}
-            placeholder="Your password"
-          />
-          {formik.touched.password && formik.errors.password && (
-            <div style={styles.error}>{formik.errors.password}</div>
-          )}
-
-          <button type="submit" style={styles.submitBtn} disabled={formik.isSubmitting}>
-            {formik.isSubmitting ? 'Logging in...' : 'Login'}
+          <button 
+            type="submit" 
+            style={styles.submitBtn} 
+            disabled={formik.isSubmitting || !formik.values.email}
+          >
+            {formik.isSubmitting ? 'Logging in...' : 'Continue with Email'}
           </button>
 
-          {formik.errors.general && <p style={styles.error}>{formik.errors.general}</p>}
+          {formik.errors.general && (
+            <div style={styles.error}>{formik.errors.general}</div>
+          )}
+
+          <p style={styles.note}>
+            No password needed! Just enter your registered email to continue.
+          </p>
         </form>
       </div>
     </div>
   );
 };
-
 
 const styles = {
   page: {
@@ -159,8 +152,12 @@ const styles = {
     fontSize: '1.1rem',
     cursor: 'pointer',
     boxShadow: '0 4px 12px rgba(252, 211, 77, 0.5)',
-    transition: 'background-color 0.3s ease',
+    transition: 'all 0.3s ease',
     marginTop: '1rem',
+    ':disabled': {
+      opacity: 0.7,
+      cursor: 'not-allowed',
+    },
   },
   error: {
     color: 'tomato',
@@ -168,6 +165,13 @@ const styles = {
     fontSize: '0.9rem',
     marginBottom: '1rem',
     textAlign: 'center',
+  },
+  note: {
+    color: '#94a3b8',
+    fontSize: '0.85rem',
+    textAlign: 'center',
+    marginTop: '1.5rem',
+    lineHeight: '1.4',
   },
 };
 

@@ -4,7 +4,11 @@ import { jwtDecode } from 'jwt-decode';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: '', email: '', role: 'driver' });
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    email: '', 
+    role: 'driver' 
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +21,12 @@ const RegisterPage = () => {
     if (loading) return;
 
     if (!formData.name.trim() || !formData.email.trim()) {
-      setError('Name and Email are required.');
+      setError('Name and Email are required');
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      setError('Please enter a valid email address');
       return;
     }
 
@@ -36,13 +45,18 @@ const RegisterPage = () => {
       if (res.ok && data.token) {
         const decoded = jwtDecode(data.token);
         localStorage.setItem('pitstopToken', data.token);
-        localStorage.setItem('pitstopUser', JSON.stringify(decoded));
-        navigate('/emergency');
+        localStorage.setItem('pitstopUser', JSON.stringify({
+          ...decoded,
+          ...data.user  // Include any additional user data from the response
+        }));
+        
+        // Navigate based on role
+        navigate(formData.role === 'mechanic' ? '/mechanic-dashboard' : '/emergency');
       } else {
         setError(data?.error || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      setError('Server error. Please try again later.');
+      setError('Network error. Please try again later.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -52,53 +66,63 @@ const RegisterPage = () => {
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        <h2 style={styles.title}>Register 🚗</h2>
+        <h2 style={styles.title}>Join Pitstop 🚗</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
-          <label style={styles.label}>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            style={styles.input}
-            placeholder="Your full name"
-          />
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Your name"
+              autoFocus
+            />
+          </div>
 
-          <label style={styles.label}>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={styles.input}
-            placeholder="you@example.com"
-          />
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Email Address</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="you@example.com"
+            />
+          </div>
 
-          <label style={styles.label}>Role</label>
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            style={styles.select}
-          >
-            <option value="driver">Driver</option>
-            <option value="mechanic">Mechanic</option>
-          </select>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>I am a</label>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              style={styles.select}
+            >
+              <option value="driver">Driver (Need Help)</option>
+              <option value="mechanic">Mechanic (Provide Help)</option>
+            </select>
+          </div>
 
           <button
             type="submit"
             style={{
               ...styles.button,
-              opacity: loading || !formData.name || !formData.email ? 0.7 : 1,
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? 'not-allowed' : 'pointer'
             }}
-            disabled={loading || !formData.name || !formData.email}
+            disabled={loading}
           >
-            {loading ? 'Registering...' : 'Enter App'}
+            {loading ? 'Creating Account...' : 'Continue'}
           </button>
 
           {error && <p style={styles.error}>{error}</p>}
+
+          <p style={styles.note}>
+            By continuing, you agree to our Terms of Service and Privacy Policy
+          </p>
         </form>
       </div>
     </div>
@@ -136,26 +160,33 @@ const styles = {
   form: {
     display: 'flex',
     flexDirection: 'column',
+    gap: '1.5rem',
+  },
+  inputGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
   },
   label: {
-    marginBottom: '0.5rem',
     fontWeight: '600',
     fontSize: '0.95rem',
     color: '#e2e8f0',
   },
   input: {
     padding: '0.75rem 1rem',
-    marginBottom: '1.2rem',
     borderRadius: '10px',
     border: '1px solid #374151',
     backgroundColor: '#0f172a',
     color: '#f1f5f9',
     fontSize: '1rem',
     outline: 'none',
+    transition: 'border-color 0.2s ease',
+    ':focus': {
+      borderColor: '#fcd34d',
+    }
   },
   select: {
     padding: '0.75rem 1rem',
-    marginBottom: '1.5rem',
     borderRadius: '10px',
     border: '1px solid #374151',
     backgroundColor: '#0f172a',
@@ -163,6 +194,9 @@ const styles = {
     fontSize: '1rem',
     outline: 'none',
     cursor: 'pointer',
+    ':focus': {
+      borderColor: '#fcd34d',
+    }
   },
   button: {
     padding: '0.9rem',
@@ -174,14 +208,22 @@ const styles = {
     color: '#0f172a',
     cursor: 'pointer',
     boxShadow: '0 6px 18px rgba(252, 211, 77, 0.5)',
-    transition: 'background-color 0.3s ease',
+    transition: 'all 0.3s ease',
+    marginTop: '0.5rem',
   },
   error: {
-    marginTop: '1rem',
     color: 'tomato',
     fontWeight: '600',
     fontSize: '0.9rem',
     textAlign: 'center',
+    marginTop: '0.5rem',
+  },
+  note: {
+    color: '#94a3b8',
+    fontSize: '0.8rem',
+    textAlign: 'center',
+    marginTop: '1.5rem',
+    lineHeight: '1.4',
   },
 };
 

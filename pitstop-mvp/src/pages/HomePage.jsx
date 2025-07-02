@@ -34,7 +34,6 @@ const HomePage = () => {
   ];
 
   const styles = {
-    // styles object remains unchanged
     page: {
       fontFamily: 'Arial, sans-serif',
       lineHeight: '1.6',
@@ -127,7 +126,6 @@ const HomePage = () => {
 
   return (
     <div style={styles.page}>
-      {/* Navbar removed */}
 
       <section style={styles.hero}>
         <div style={styles.heroContent}>

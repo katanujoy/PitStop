@@ -1,4 +1,13 @@
+<<<<<<< HEAD
 Flask==3.1.1
 Flask-Cors==4.0.0
 Flask-SQLAlchemy==3.1.1
 gunicorn
+=======
+fastapi
+uvicorn
+sqlalchemy
+passlib[bcrypt]
+pydantic
+python-dotenv
+>>>>>>> c41985a (fixed up documentation error)
